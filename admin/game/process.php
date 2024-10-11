@@ -10,13 +10,13 @@ if (isset($_POST['sent']) && $_POST['sent'] == "1"){
         $stmt -> execute([":name" =>$_POST['game_name'], ":price" =>$_POST['game_price'], ":editor"=> $_POST['game_editor'], ":date"=> $_POST['game_date'], ":description"=> $_POST['game_description'], ":stock"=> $_POST['game_stock']]);
     }else{
         $stmt = $db->prepare("UPDATE table_game SET game_name=:game_name, game_price=:game_price, game_editor=:game_editor, game_date=:game_date, game_description=:game_description, game_stock=:game_stock WHERE game_id=:game_id");
-        $stmt->bindValue(":game_name", $_POST['game_name']);
-        $stmt->bindValue(":game_price", $_POST['game_price']);
-        $stmt->bindValue(":game_editor", $_POST['game_editor']);
-        $stmt->bindValue(":game_date", $_POST['game_date']);
-        $stmt->bindValue(":game_description", $_POST['game_description']);
-        $stmt->bindValue(":game_stock", $_POST['game_stock']);
-        $stmt->bindValue(":game_id", $_POST["game_id"]);
+        $stmt->bindValue(":game_name", trim($_POST['game_name']));
+        $stmt->bindValue(":game_price", trim($_POST['game_price']));
+        $stmt->bindValue(":game_editor", trim($_POST['game_editor']));
+        $stmt->bindValue(":game_date", trim($_POST['game_date']));
+        $stmt->bindValue(":game_description", trim($_POST['game_description']));
+        $stmt->bindValue(":game_stock", trim($_POST['game_stock']));
+        $stmt->bindValue(":game_id", trim($_POST["game_id"]));
         $stmt->execute();
        }};
     

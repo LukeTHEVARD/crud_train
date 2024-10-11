@@ -24,7 +24,8 @@ $recordset = $stmt->fetchAll();
             <th>prix</th>
             <th>date</th>
             <th>supprimer</th>
-            <th>modifier</th>
+            <th>modifier</th>        
+            <th><a href="form.php">➕</th>
         </thead>
         <?php foreach($recordset as $row){?>
         <tr>
@@ -33,7 +34,7 @@ $recordset = $stmt->fetchAll();
             <td> <?= htmlspecialchars($row['game_price']);?></td>
             <td> <?= htmlspecialchars(date_adapt($row['game_date']));?></td>
             <td><a href="delete.php?id=<?= htmlspecialchars($row['game_id']);?>">🗑️</td>            
-            <td><a href="form.php?id=<?= htmlspecialchars($row['game_id']);?>">📝</td>
+            <td><a href="form.php?id=<?= htmlspecialchars($row['game_id']);?>">📝</td> 
         </tr>
         <?php } ?>
     </table>
