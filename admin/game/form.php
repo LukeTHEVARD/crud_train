@@ -12,9 +12,10 @@ $game_date="";
 $game_description="";
 $game_stock="";
 
-if (isset($_GET['id']) && is_numeric($_GET['id'])){
-    $stmt = $db -> prepare("SELECT*FROM table_game ORDER BY game_id DESC");
-    $stmt -> execute();
+if (isset($_GET['id']) && is_numeric($_GET['id'])){$stmt = $db->prepare("SELECT * FROM table_game ORDER BY game_id DESC");
+
+    $stmt = $db -> prepare("SELECT * FROM table_game WHERE game_id=:id");
+    $stmt -> execute([":id" => $_GET['id']]);
         if($row = $stmt->fetch()){
             $game_name=$row['game_name'];
             $game_price=$row['game_price'];

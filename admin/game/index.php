@@ -4,7 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT']."/admin/include/connect.php";
 require_once $_SERVER['DOCUMENT_ROOT']."/admin/include/function.php";
 require_once $_SERVER['DOCUMENT_ROOT']."/admin/include/protection.php";
 
-$stmt = $db -> prepare("SELECT*FROM table_game ORDER BY game_id DESC");
+$stmt = $db -> prepare("SELECT*FROM table_game ORDER BY game_id ASC");
 $stmt -> execute();
 $recordset = $stmt->fetchAll();
 
