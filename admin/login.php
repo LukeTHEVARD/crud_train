@@ -22,7 +22,7 @@
                 if(password_verify($_POST['user_password'], $row['user_password'])){
                     session_start();
                     $_SESSION["logged"]="1";
-                    redirect("index.php");
+                    redirect("game/index.php");
                 }
                 $error="problème de connexion";
             }
@@ -31,22 +31,25 @@
     
     ?>
     <form method="POST" action="login.php">
+        <div class="wrapper position-absolute top-50 start-50 translate-middle">
+            <div id="form-group">
+                <?php if($error){ ?>
+                    <div><?= $error; ?> </div>
+                <?php } ?>
+                <label for="InputEmail1">Email address</label>
+                <input type="email" name="user_email" class="form-control" id="InputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
 
-        <div class="form-group">
-            <?php if($error){ ?>
-                <div><?= $error; ?> </div>
-            <?php } ?>
-            <label for="InputEmail1">Email address</label>
-            <input type="email" name="user_email" class="form-control" id="InputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            <div class="form-group">
+                <label for="InputPassword1">Password</label>
+                <input type="password" name="user_password" class="form-control" id="InputPassword1" placeholder="Password">
+                <br>
+            </div>
+            
+            <button type="submit" value="ok" class="btn btn-primary">Submit</button>
         </div>
 
-        <div class="form-group">
-            <label for="InputPassword1">Password</label>
-            <input type="password" name="user_password" class="form-control" id="InputPassword1" placeholder="Password">
-        </div>
-
-        <button type="submit" value="ok" class="btn btn-primary">Submit</button>
         
     </form>
 </body>

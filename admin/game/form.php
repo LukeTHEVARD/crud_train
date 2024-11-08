@@ -22,6 +22,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])){
             $game_date=$row['game_date'];
             $game_description=$row['game_description'];
             $game_stock=$row['game_stock'];
+            $game_image=$row['game_image'];
             $game_id=$row['game_id'];
         }
 }
@@ -36,44 +37,51 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])){
     <title>nouveau produit | Royal Pixels Gaming</title>
 </head>
 <body>
-    <form method="POST" action="process.php">
+    <div class="container">
+        <form method="POST" action="process.php" enctype="multipart/form-data">
 
-        <div class="form-group">
-            <label for="game_name">Nom du jeu</label>
-            <input type="text" name="game_name" class="form-control" id="game_name" aria-describedby="emailHelp" placeholder="Entre le Nom du jeu" value="<?= htmlspecialchars($game_name);?>">
-        </div>
+            <div class="form-group">
+                <label for="game_name">Nom du jeu</label>
+                <input type="text" name="game_name" class="form-control" id="game_name" aria-describedby="emailHelp" placeholder="Entre le Nom du jeu" value="<?= htmlspecialchars($game_name);?>">
+            </div>
 
-        <div class="form-group">
-            <label for="game_price">Prix</label>
-            <input type="text" name="game_price" class="form-control" id="game_price" aria-describedby="price" placeholder="entre le prix en €" value="<?= htmlspecialchars($game_price);?>">
-        </div>
-        
-        <div class="form-group">
-            <label for="game_editor">editeur</label>
-            <input type="text" name="game_editor" class="form-control" id="game_editor" aria-describedby="editeur" placeholder="Entre l'editeur du jeu" value="<?= htmlspecialchars($game_editor);?>">
-        </div>
+            <div class="form-group">
+                <label for="game_price">Prix</label>
+                <input type="text" name="game_price" class="form-control" id="game_price" aria-describedby="price" placeholder="entre le prix en €" value="<?= htmlspecialchars($game_price);?>">
+            </div>
+            
+            <div class="form-group">
+                <label for="game_editor">editeur</label>
+                <input type="text" name="game_editor" class="form-control" id="game_editor" aria-describedby="editeur" placeholder="Entre l'editeur du jeu" value="<?= htmlspecialchars($game_editor);?>">
+            </div>
 
-        <div class="form-group">
-            <label for="game_date">Date de Sortie</label>
-            <input type="date" name="game_date" class="form-control" id="game_date" aria-describedby="Date" placeholder="" value="<?= htmlspecialchars($game_date);?>">
-        </div>
+            <div class="form-group">
+                <label for="game_date">Date de Sortie</label>
+                <input type="date" name="game_date" class="form-control" id="game_date" aria-describedby="Date" placeholder="" value="<?= htmlspecialchars($game_date);?>">
+            </div>
 
-        <div class="form-group">
-            <label for="game_description">description</label>
-            <input type="text" name="game_description" class="form-control" id="game_description" aria-describedby="description" placeholder="Entre la description du jeu" value="<?= htmlspecialchars($game_description);?>">
-        </div>
+            <div class="form-group">
+                <label for="game_description">description</label>
+                <input type="text" name="game_description" class="form-control" id="game_description" aria-describedby="description" placeholder="Entre la description du jeu" value="<?= htmlspecialchars($game_description);?>">
+            </div>
 
-        <div class="form-group">
-            <label for="game_stock">stock</label>
-            <input type="text" name="game_stock" class="form-control" id="game_stock" aria-describedby="stock" placeholder="Entre le nombre restant en stock" value="<?= htmlspecialchars($game_stock);?>">
-        </div>
+            <div class="form-group">
+                <label for="game_stock">stock</label>
+                <input type="text" name="game_stock" class="form-control" id="game_stock" aria-describedby="stock" placeholder="Entre le nombre restant en stock" value="<?= htmlspecialchars($game_stock);?>">
+            </div>
 
+            <div class="form-group">
+                <label for="game_image">image</label>
+                <input type="file" name="game_image" class="form-control" id="game_image" aria-describedby="image" placeholder="Choisi ton image">
+            </div>
 
-        <input type="hidden" name="game_id" value="<?= htmlspecialchars($game_id);?>">
-        <button type="submit" value="ok" class="btn btn-primary">Submit</button>
+            <br>
+            <input type="hidden" name="game_id" value="<?= htmlspecialchars($game_id);?>">
+            <button type="submit" value="ok" class="btn btn-primary">Submit</button>
 
-        <input type="hidden" name="sent" value="1">
-        
-    </form>
+            <input type="hidden" name="sent" value="1">
+            
+        </form>
+    </div>
 </body>
 </html>
