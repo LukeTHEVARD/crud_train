@@ -5,10 +5,12 @@ require_once $_SERVER['DOCUMENT_ROOT']."/admin/include/function.php";
 require_once $_SERVER['DOCUMENT_ROOT']."/admin/include/protection.php";
 
 $path = $_SERVER['DOCUMENT_ROOT']."/upload/";
-$prefix = "lg_";
-$dest_height = 400;
-$dest_width = 400; 
-$crop = true;
+$img_format = [
+    "lg_"=>["width" => 1200, "height" => 900, "crop" => false],
+    "md_"=>["width" => 800, "height" => 600, "crop" => false],
+    "sm_"=>["width" => 400, "height" => 400, "crop" => true],
+    "xs_"=>["width" => 200, "height" => 150, "crop" => false],
+];
 
 if (isset ($_FILES['game_image']) && $_FILES['game_image']['error'] == 0){
     $extensions = ["jpg", 'jpeg', "png", "gif", "webp"];
@@ -32,58 +34,61 @@ if (isset ($_FILES['game_image']) && $_FILES['game_image']['error'] == 0){
     move_uploaded_file($_FILES['game_image']['tmp_name'], $path.$file);
 
     $sizes = getimagesize($path.$file);
-    if ($sizes = getimagesize($path.$file)){
-        $src_width = $sizes[0];
-        $src_height = $sizes[1];
-    }else{
-        exit();
-    }
-    
-    if ($src_width > $dest_width || $src_height > $dest_height) {
-        if (!$crop){
-            if ($src_width > $src_height){  
-                # format paysage
-                $dest_height = round($src_height * $dest_width / $src_width);
 
-            }else{  
-                # format portrait 
-                $dest_width = round($src_width * $dest_height / $src_height);
-            }
-        }
-    }else{
-        $dest_height = $src_height;
-        $dest_width = $src_width;
-        $crop = false;
-    }
-    $dest = imagecreatetruecolor($dest_width, $dest_height);
-    switch($extension){
-        case "jpeg":
-        case "jpg":
-            $src = imagecreatefromjpeg($path.$file);
-            break;
-        case "gif":
-            $src = imagecreatefromgif($path.$file);
-            break;
-        case "png":
-            $src = imagecreatefrompng($path.$file);
-            break;
-        case "webp":
-            $src = imagecreatefromwebp($path.$file);
-            break;
-        default:
+    foreach($img_format as $prefix => $info){
+        $dest_height = $info["height"];
+        $dest_width = $info["width"];
+        $crop = $info["crop"];
+        if ($sizes = getimagesize($path.$file)){
+            $src_width = $sizes[0];
+            $src_height = $sizes[1];
+        }else{
             exit();
-    }
-    if (!$crop){
-        imagecopyresampled($dest, $src, 0, 0, 0, 0, $dest_width, $dest_height, $src_width, $src_height);
-    }else{
+        }
         
+        if ($src_width > $dest_width || $src_height > $dest_height) {
+            if (!$crop){
+                if ($src_width > $src_height){  
+                    # format paysage
+                    $dest_height = round($src_height * $dest_width / $src_width);
+
+                }else{  
+                    # format portrait 
+                    $dest_width = round($src_width * $dest_height / $src_height);
+                }
+            }
+        }else{
+            $dest_height = $src_height;
+            $dest_width = $src_width;
+            $crop = false;
+        }
+        $dest = imagecreatetruecolor($dest_width, $dest_height);
+        switch($extension){
+            case "jpeg":
+            case "jpg":
+                $src = imagecreatefromjpeg($path.$file);
+                break;
+            case "gif":
+                $src = imagecreatefromgif($path.$file);
+                break;
+            case "png":
+                $src = imagecreatefrompng($path.$file);
+                break;
+            case "webp":
+                $src = imagecreatefromwebp($path.$file);
+                break;
+            default:
+                exit();
+        }
+            
         imagecopyresampled($dest, $src, 0, 0, 
-        ($src_width > $src_height ? round(($src_width-$src_height)/2) : 0 ), /* paysage  */
-        ($src_width > $src_height ? 0 : round(($src_height-$src_width)/2)), /* portrait */ $dest_width, $dest_height,
-        ($src_width > $src_height ? $src_height : $src_width),
-        ($src_width > $src_height ? $src_height : $src_width),);
+        ($crop ? ($src_width > $src_height ? round(($src_width-$src_height)/2) : 0 ): 0 ), /* paysage  */
+        ($crop ? ($src_width > $src_height ? 0 : round(($src_height-$src_width)/2)): 0 ), /* portrait */ $dest_width, $dest_height,
+        ($crop ? ($src_width > $src_height ? $src_height : $src_width) : $src_width),
+        ($crop ? ($src_width > $src_height ? $src_height : $src_width) : $src_height),);
+        
+        imagewebp($dest, $path.$prefix.$game_image.".webp", 100);
     }
-    imagewebp($dest, $path.$prefix.$game_image.".webp", 100);
     if (file_exists($path.$file))
         unlink($path.$file);
     }

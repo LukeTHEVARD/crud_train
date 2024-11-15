@@ -24,9 +24,10 @@ function cleanFilename($str){
 }
 
 function checkFilename ($str){
-    global $prefix;
+    global $img_format;
     $results = $str;
     $cpt = 1;
+    $prefix = array_key_first($img_format);
     while(file_exists($_SERVER['DOCUMENT_ROOT']."/upload/".$prefix.$results.($cpt > 1 ? "_(".$cpt.")": "").".webp")){
 
         $cpt++;
