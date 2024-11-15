@@ -30,6 +30,7 @@ if (isset ($_FILES['game_image']) && $_FILES['game_image']['error'] == 0){
     $game_image = checkFilename($game_image);
     
     $file = $game_image.".".$extension;
+    $src_file = $file;
 
     move_uploaded_file($_FILES['game_image']['tmp_name'], $path.$file);
 
@@ -39,7 +40,7 @@ if (isset ($_FILES['game_image']) && $_FILES['game_image']['error'] == 0){
         $dest_height = $info["height"];
         $dest_width = $info["width"];
         $crop = $info["crop"];
-        if ($sizes = getimagesize($path.$file)){
+        if ($sizes = getimagesize($path.$src_file)){
             $src_width = $sizes[0];
             $src_height = $sizes[1];
         }else{
@@ -66,16 +67,16 @@ if (isset ($_FILES['game_image']) && $_FILES['game_image']['error'] == 0){
         switch($extension){
             case "jpeg":
             case "jpg":
-                $src = imagecreatefromjpeg($path.$file);
+                $src = imagecreatefromjpeg($path.$src_file);
                 break;
             case "gif":
-                $src = imagecreatefromgif($path.$file);
+                $src = imagecreatefromgif($path.$src_file);
                 break;
             case "png":
-                $src = imagecreatefrompng($path.$file);
+                $src = imagecreatefrompng($path.$src_file);
                 break;
             case "webp":
-                $src = imagecreatefromwebp($path.$file);
+                $src = imagecreatefromwebp($path.$src_file);
                 break;
             default:
                 exit();
@@ -88,6 +89,8 @@ if (isset ($_FILES['game_image']) && $_FILES['game_image']['error'] == 0){
         ($crop ? ($src_width > $src_height ? $src_height : $src_width) : $src_height),);
         
         imagewebp($dest, $path.$prefix.$game_image.".webp", 100);
+        if(!$crop){$src_file = $prefix.$game_image.".webp";
+        $extension = "webp";}
     }
     if (file_exists($path.$file))
         unlink($path.$file);
@@ -96,12 +99,10 @@ if (!$_FILES['game_image']['error'] == 0){
     rickRoll();
 }
 
-exit();
-
 if (isset($_POST['sent']) && $_POST['sent'] == "1"){
     if($_POST["game_id"] == 0){
         $stmt = $db->prepare("INSERT INTO table_game(game_name, game_price, game_editor, game_date, game_description, game_stock, game_image) VALUES(:name, :price, :editor, :date, :description, :stock, :image)");
-        $stmt -> execute([":name" =>$_POST['game_name'], ":price" =>$_POST['game_price'], ":editor"=> $_POST['game_editor'], ":date"=> $_POST['game_date'], ":description"=> $_POST['game_description'], ":stock"=> $_POST['game_stock'], ":image"=> $_POST['game_image']]);
+        $stmt -> execute([":name" =>$_POST['game_name'], ":price" =>$_POST['game_price'], ":editor"=> $_POST['game_editor'], ":date"=> $_POST['game_date'], ":description"=> $_POST['game_description'], ":stock"=> $_POST['game_stock'], ":image"=> $game_image.".webp"]);
     }else{
         $stmt = $db->prepare("UPDATE table_game SET game_name=:game_name, game_price=:game_price, game_editor=:game_editor, game_date=:game_date, game_description=:game_description, game_stock=:game_stock, game_image=:game_image WHERE game_id=:game_id");
         $stmt->bindValue(":game_name", trim($_POST['game_name']));
@@ -110,7 +111,7 @@ if (isset($_POST['sent']) && $_POST['sent'] == "1"){
         $stmt->bindValue(":game_date", trim($_POST['game_date']));
         $stmt->bindValue(":game_description", trim($_POST['game_description']));
         $stmt->bindValue(":game_stock", trim($_POST['game_stock']));
-        $stmt->bindValue(":game_image", trim($_POST['game_image']));
+        $stmt->bindValue(":game_image", $game_image.".webp");
         $stmt->bindValue(":game_id", trim($_POST['game_id']));
         $stmt->execute();
        }};
