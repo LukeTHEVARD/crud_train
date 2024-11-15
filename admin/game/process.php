@@ -6,8 +6,9 @@ require_once $_SERVER['DOCUMENT_ROOT']."/admin/include/protection.php";
 
 $path = $_SERVER['DOCUMENT_ROOT']."/upload/";
 $prefix = "lg_";
-$dest_height = 600;
-$dest_width = 800; 
+$dest_height = 400;
+$dest_width = 400; 
+$crop = true;
 
 if (isset ($_FILES['game_image']) && $_FILES['game_image']['error'] == 0){
     $extensions = ["jpg", 'jpeg', "png", "gif", "webp"];
@@ -39,39 +40,55 @@ if (isset ($_FILES['game_image']) && $_FILES['game_image']['error'] == 0){
     }
     
     if ($src_width > $dest_width || $src_height > $dest_height) {
-        if ($src_width > $src_height){  
-            # format paysage
-            $dest_height = round($src_height * $dest_width / $src_width);
+        if (!$crop){
+            if ($src_width > $src_height){  
+                # format paysage
+                $dest_height = round($src_height * $dest_width / $src_width);
 
-        }else{  
-            # format portrait 
-            $dest_width = round($src_width * $dest_height / $src_height);
+            }else{  
+                # format portrait 
+                $dest_width = round($src_width * $dest_height / $src_height);
+            }
         }
-        $dest = imagecreatetruecolor($dest_width, $dest_height);
-        switch($extension){
-            case "jpeg":
-            case "jpg":
-                $src = imagecreatefromjpeg($path.$file);
-                break;
-            case "gif":
-                $src = imagecreatefromgif($path.$file);
-                break;
-            case "png":
-                $src = imagecreatefrompng($path.$file);
-                break;
-            case "webp":
-                $src = imagecreatefromwebp($path.$file);
-                break;
-            default:
-                exit();
-        }
-        imagecopyresampled($dest, $src, 0, 0, 0, 0, $dest_width, $dest_height, $src_width, $src_height);
-        imagewebp($dest, $path.$prefix.$game_image.".webp", 100);
+    }else{
+        $dest_height = $src_height;
+        $dest_width = $src_width;
+        $crop = false;
     }
-}
+    $dest = imagecreatetruecolor($dest_width, $dest_height);
+    switch($extension){
+        case "jpeg":
+        case "jpg":
+            $src = imagecreatefromjpeg($path.$file);
+            break;
+        case "gif":
+            $src = imagecreatefromgif($path.$file);
+            break;
+        case "png":
+            $src = imagecreatefrompng($path.$file);
+            break;
+        case "webp":
+            $src = imagecreatefromwebp($path.$file);
+            break;
+        default:
+            exit();
+    }
+    if (!$crop){
+        imagecopyresampled($dest, $src, 0, 0, 0, 0, $dest_width, $dest_height, $src_width, $src_height);
+    }else{
+        
+        imagecopyresampled($dest, $src, 0, 0, 
+        ($src_width > $src_height ? round(($src_width-$src_height)/2) : 0 ), /* paysage  */
+        ($src_width > $src_height ? 0 : round(($src_height-$src_width)/2)), /* portrait */ $dest_width, $dest_height,
+        ($src_width > $src_height ? $src_height : $src_width),
+        ($src_width > $src_height ? $src_height : $src_width),);
+    }
+    imagewebp($dest, $path.$prefix.$game_image.".webp", 100);
+    if (file_exists($path.$file))
+        unlink($path.$file);
+    }
 if (!$_FILES['game_image']['error'] == 0){
-    var_dump($_FILES);
-    #rickRoll();
+    rickRoll();
 }
 
 exit();
