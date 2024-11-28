@@ -37,14 +37,16 @@ $recordset = $stmt->fetchAll();
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($recordset as $row){?>
+                <?php foreach($recordset as $row){
+                    $item = new Game ($row);
+                    ?>
                 <tr scope="row">
-                    <td> <?= htmlspecialchars($row['game_name']);?></td>
-                    <td> <?= htmlspecialchars($row['game_editor']);?></td>
-                    <td> <?= htmlspecialchars($row['game_price']);?></td>
-                    <td> <?= htmlspecialchars(date_adapt($row['game_date']));?></td>
-                    <td><a href="delete.php?id=<?= htmlspecialchars($row['game_id']);?>">🗑️</td>            
-                    <td><a href="form.php?id=<?= htmlspecialchars($row['game_id']);?>">📝</td> 
+                    <td> <?= $item->getName();?></td>
+                    <td> <?= $item->getEditor();?></td>
+                    <td> <?= $item->getPrice();?></td>
+                    <td> <?= date_adapt($item->getDate());?></td>
+                    <td><a href="delete.php?id=<?= htmlspecialchars($item->getId());?>">🗑️</td>            
+                    <td><a href="form.php?id=<?= htmlspecialchars($item->getId());?>">📝</td> 
                 </tr>
                 <?php } ?>
             </tbody>

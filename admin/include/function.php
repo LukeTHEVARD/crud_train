@@ -40,4 +40,15 @@ function rickRoll(){
     exit();
 }
 
+spl_autoload_register("loadClass");
+
+function loadClass($className){
+
+    if(file_exists($_SERVER['DOCUMENT_ROOT']."/class/".$className.".class.php")){
+        require_once $_SERVER['DOCUMENT_ROOT']."/class/".$className.".class.php";
+    }else{
+        rickRoll();
+    }
+}
+
 ?>
