@@ -6,28 +6,27 @@ class Game{
     private int $id;
     private ?string $name;
     private ?float $price;
-    private ?string $description;
-    private ?string $editor;
-    private ?int $stock;
-    private ?string $image;
-    private ?string $date;
+    private ?string $description = "";
+    private ?string $editor = "";
+    private ?int $stock = 0;
+    private ?string $image = "";
+    private ?string $date = "";
 
 
 
-    function __construct($data){
-        if (!is_null($data)){
-            foreach($data as $key=>$value){
-                $methodName = "set".ucfirst(str_replace("game_","",$key));
-                if (method_exists($this, $methodName)){
-                    if (!is_null($value)){
-                        $this -> {$methodName}($value);
-                    }else{
-                        $this -> {$methodName}("");
-                    }
+    public function __construct($data = NULL)
+    {
+        if (!is_null($data) and is_array($data)) {
+            foreach ($data as $key => $value) {
+                $methodName = "set" . ucfirst(str_replace("game_", "", $key));
+                if (method_exists($this,$methodName)){
+                    $this->{$methodName}($value);
                 }
             }
-        }else{
-            $this->setName("bug");
+        } else {
+            $this->setId(0);
+            $this->setName("no_name");
+            $this->setPrice(0);
         }
     }
     //setter
@@ -52,11 +51,11 @@ class Game{
     public function setStock(int $value){
         $this -> stock = $value;
     }
-    public function setImage(string $value){
+    public function setImage(?string $value){
         if ($value != NULL){
             $this -> image = $value;
         }else{
-            $this -> image = "";
+            $this -> image = "bug_image";
         }
     }
     //getter
@@ -71,22 +70,22 @@ class Game{
         }
     }
     public function getPrice(){
-        return $this -> price;
+        return htmlspecialchars($this -> price);
     }
     public function getEditor(){
-        return $this -> editor;
+        return htmlspecialchars($this -> editor);
     }
     public function getDate(){
-        return $this -> date;
+        return htmlspecialchars($this -> date);
     }
     public function getDescription(){
-        return $this -> description;
+        return htmlspecialchars($this -> description);
     }
     public function getStock(){
-        return $this -> stock;
+        return htmlspecialchars($this -> stock);
     }
     public function getImage(){
-        return $this -> image;
+        return htmlspecialchars($this -> image);
     }
     
 

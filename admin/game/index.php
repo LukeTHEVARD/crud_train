@@ -27,6 +27,7 @@ $recordset = $stmt->fetchAll();
         <table class="table table-striped">
             <thead class>
                 <tr>
+                    <th scope="col">image</th>
                     <th scope="col">jeu</th>
                     <th scope="col">editeur</th>
                     <th scope="col">prix</th>
@@ -41,6 +42,7 @@ $recordset = $stmt->fetchAll();
                     $item = new Game ($row);
                     ?>
                 <tr scope="row">
+                    <td> <img src="/upload/xs_<?= $item->getImage();?>"></td>
                     <td> <?= $item->getName();?></td>
                     <td> <?= $item->getEditor();?></td>
                     <td> <?= $item->getPrice();?></td>
