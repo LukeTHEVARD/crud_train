@@ -14,8 +14,14 @@ class Game{
 
 
 
-    public function __construct($data = NULL)
-    {
+    public function __construct($data = NULL){
+            $this->setId(0);
+            $this->setName("no_name");
+            $this->setPrice(0);
+            $this->hydrate($data);
+    }
+
+    public function hydrate($data= NULL){
         if (!is_null($data) and is_array($data)) {
             foreach ($data as $key => $value) {
                 $methodName = "set" . ucfirst(str_replace("game_", "", $key));
@@ -23,12 +29,8 @@ class Game{
                     $this->{$methodName}($value);
                 }
             }
-        } else {
-            $this->setId(0);
-            $this->setName("no_name");
-            $this->setPrice(0);
-        }
-    }
+        }}
+
     //setter
     public function setId(int $value){
         $this -> id = ($value<0?0:$value);
