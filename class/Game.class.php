@@ -2,6 +2,12 @@
 
 
 class Game{
+    public const IMG_FORMAT = [
+        "lg_"=>["width" => 1200, "height" => 900, "crop" => false],
+        "md_"=>["width" => 800, "height" => 600, "crop" => false],
+        "sm_"=>["width" => 400, "height" => 400, "crop" => true],
+        "xs_"=>["width" => 200, "height" => 150, "crop" => false],
+    ];
 
     private int $id;
     private ?string $name;

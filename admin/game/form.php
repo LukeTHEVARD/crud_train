@@ -6,15 +6,10 @@ require_once $_SERVER['DOCUMENT_ROOT']."/admin/include/protection.php";
 
 if (isset($_GET['id']) && is_numeric($_GET['id'])){
     
-    $stmt = $db->prepare("SELECT * FROM table_game ORDER BY game_id DESC");
-
-    $stmt = $db -> prepare("SELECT * FROM table_game WHERE game_id=:id");
-    $stmt -> execute([":id" => $_GET['id']]);
-        if($row = $stmt->fetch()){
-
-            $game = new Game ($row);
-
-        }
+    $manager = new GameManager();
+    $row = $manager->selectOne($_GET['id']);
+    $game = new Game($row);
+    
 }else{
     
     $game=new Game();
